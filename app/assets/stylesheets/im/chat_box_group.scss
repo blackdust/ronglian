@@ -1,0 +1,68 @@
+.chat-box-group{
+  $input_height: 6rem;
+  weight: 200px;
+  height: 450px;
+  position: relative;
+  display: block;
+  .message-list{
+    position: absolute;
+    top: 0;
+    bottom: $input_height;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    padding: 1rem;
+    .left-message{
+      float: left;
+      width: 480px;
+      background-color: #ccc;
+      margin : 0 0 1rem 0;
+      padding: 1rem;
+      clear: both;
+    }
+    .right-message{
+      float: right;
+      width: 480px;
+      background-color: #ccc;
+      margin : 0 0 1rem 0;
+      padding: 1rem;
+      clear: both;
+    }
+  }
+  .text-input{
+    font-size: $input_height*0.1 !important;
+    .textarea{
+      position: absolute;
+      height: $input_height*0.6;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: $input_height*0.4;
+      textarea{
+      width:100%;
+      height:100%;
+      padding: 0;
+      padding-left: 0.5rem;
+      line-height: $input_height*0.15;
+      }
+    }
+    button{
+      position: absolute;
+      height: $input_height*0.35;
+      right: 0;
+      bottom: 0;
+    }
+    height: $input_height;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  .user-list{
+    height: $input_height*0.2;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
