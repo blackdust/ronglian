@@ -96,8 +96,8 @@
 
     obj = new RL_YTX.CreateGroupBuilder()
     obj.setGroupName(jQuery(document).find(".group-name").val())
-    obj. setScope(1)
-    obj. setPermission(1)
+    obj.setScope(1)
+    obj.setPermission(1)
     obj.setTarget(1)
 
     RL_YTX.createGroup obj
@@ -178,6 +178,7 @@ GroupList = React.createClass
               <input type="checkbox" value={item.id}/>
               <button className="ui button" onClick={@props.function}>退出讨论组</button>
               <button className="ui button" onClick={@get_members}>获取成员列表</button>
+              <button className="ui button" onClick={@invite_other_members}>邀请其他成员</button>
             </div>
         else
           <p>没有加入讨论组</p>  
@@ -196,6 +197,24 @@ GroupList = React.createClass
       console.log obj
     ,
     (obj)->
+
+  invite_other_members:(event)->
+    id = jQuery(ReactDOM.findDOMNode(event.target)).parent().find("p").attr("data")
+    user_ids = []
+    for dom in jQuery(document).find(".user-item input:checked")
+      user_ids.push(jQuery(dom).attr("data"))
+    builder = new RL_YTX.InviteJoinGroupBuilder()
+    builder. setGroupId(id)
+    builder. setMembers(user_ids)
+    builder. setConfirm(1)
+    RL_YTX.inviteJoinGroup builder
+    ,
+    (obj)->
+      console.log obj
+      # 等待被邀请者同意
+    ,
+    (obj)->
+      console.log "邀请失败"
 
 UsersList = React.createClass
   render: ->

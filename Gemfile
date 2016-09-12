@@ -52,6 +52,6 @@ gem 'play_auth', :github => 'mindpin/play_auth',
 gem 'react-rails', '1.8.0'
 gem 'sprockets-coffee-react', '4.0.0'
 
-# 变通方法满足play_auth
+
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'simple_form'               
