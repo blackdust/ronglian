@@ -4,57 +4,60 @@
     # [{"name":"name","id":"id"}]
     
   componentDidMount: ->
-    _appid         = ''
-    _app_token     = ''
-    _user_id       =  @props.data.current_user.id
+    resp = RL_YTX.init(@props.data._appid)
 
-    resp = RL_YTX.init(_appid)
     if 200 == resp.code 
       console.log "初始化成功 开始登陆"
       loginBuilder = new RL_YTX.LoginBuilder()
       loginBuilder.setType(1)
-      loginBuilder.setUserName(_user_id)
+      loginBuilder.setUserName(@props.data.current_user.id)
       loginBuilder.setPwd()
-      timestamp = @now_format_time()
-      sig = hex_md5(_appid + _user_id + timestamp + _app_token)
-      loginBuilder.setSig(sig)
-      loginBuilder.setTimestamp(timestamp)
+
+      sig       = ""
+      timestamp = ""
+      jQuery.ajax
+        url: "/get_sig",
+        method: "POST"
+      .success (msg)=>
+        timestamp = msg["timestamp"]
+        sig = msg["sig"]
+        loginBuilder.setSig(sig)
+        loginBuilder.setTimestamp(timestamp)
+        @login_user(loginBuilder)
       
-      RL_YTX.login loginBuilder, (obj)=>
-        console.log "登陆成功 设置昵称 + 监听即时通信消息(群组) + 离线消息(群组) + 获得所在组"
-        # 
-        uploadPersonInfoBuilder = new RL_YTX.UploadPersonInfoBuilder()
-        uploadPersonInfoBuilder.setNickName(@props.data.current_user.name)
-        RL_YTX.uploadPerfonInfo uploadPersonInfoBuilder
+  login_user:(loginBuilder)->
+    RL_YTX.login loginBuilder, (obj)=>
+      console.log "登陆成功 设置昵称 + 监听即时通信消息(群组) + 离线消息(群组) + 获得所在组"
+     
+      uploadPersonInfoBuilder = new RL_YTX.UploadPersonInfoBuilder()
+      uploadPersonInfoBuilder.setNickName(@props.data.current_user.name)
+      RL_YTX.uploadPerfonInfo uploadPersonInfoBuilder
 
-        # -----------------------------------------获得所在组
-        obj = new RL_YTX.GetGroupListBuilder()
-        obj.setPageSize(-1)
-        obj.setTarget(1)
-        RL_YTX.getGroupList obj
-        ,
-        (obj)=>
-          console.log "成功获得所有的讨论组列表"
-          ary = []
-          for item in obj
-            hash = {"name":item.name, "id":item.groupId}
-            ary.push hash
-          @setState
-            groups: ary
-        ,
-        (obj)->
-          console.log obj.msg
-        # --------------------------------------------
-
-        ,
-        (obj)->
-        ,
-        (resp)->
-          console.log resp.code
-      # 监听im+离线消息
-      RL_YTX.onMsgReceiveListener (obj)=>
-        @EV_onMsgReceiveListener(obj)
-
+      # 获得所在组
+      obj = new RL_YTX.GetGroupListBuilder()
+      obj.setPageSize(-1)
+      obj.setTarget(1)
+      RL_YTX.getGroupList obj
+      ,
+      (obj)=>
+        console.log "成功获得所有的讨论组列表"
+        ary = []
+        for item in obj
+          hash = {"name":item.name, "id":item.groupId}
+          ary.push hash
+        @setState
+          groups: ary
+      ,
+      (obj)->
+        console.log obj.msg
+      ,
+      (obj)->
+      ,
+      (resp)->
+        console.log resp.code
+    # 监听im+离线消息
+    RL_YTX.onMsgReceiveListener (obj)=>
+      @EV_onMsgReceiveListener(obj)
 
   EV_onMsgReceiveListener:(obj)->
     you_senderNickName = obj.senderNickName
@@ -67,26 +70,6 @@
     console.log obj.msgContent
     time = new Date(parseInt(obj.msgDateCreated))
     console.log time
-
-  now_format_time: ->
-    now = new Date()
-    year = "" + now.getFullYear() 
-    month = "" + (now.getMonth() + 1)
-    if month.length == 1
-      month = "0" + month
-    day = "" + now.getDate()
-    if day.length == 1
-      day = "0" + day
-    hour = "" + now.getHours()
-    if hour.length == 1
-      hour = "0" + hour
-    minute = "" + now.getMinutes()
-    if minute.length == 1
-      minute = "0" + minute
-    second = "" + now.getSeconds()
-    if second.length == 1
-      second = "0" + second
-    year +  month +  day +  hour +  minute +  second
 
   join_group: ->
     user_ids = [@props.data.current_user.id]

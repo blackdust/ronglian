@@ -1,4 +1,5 @@
 class ImController < ApplicationController
+  require 'digest/md5'
   layout 'im_layout'
   before_filter :check_login
 
@@ -10,7 +11,8 @@ class ImController < ApplicationController
       chater_self: {id: 1, name: "我"},
       messages: [],
       current_user: {id:current_user.id.to_s, name: current_user.name},
-      users:ary
+      users: ary,
+      _appid: ''
     }
 
   end
@@ -22,7 +24,16 @@ class ImController < ApplicationController
     @component_data = {
       current_user: {id:current_user.id.to_s, name: current_user.name},
       users:ary,
+      _appid: ''
     }
+  end
+
+  def get_sig
+    _appid         = ''
+    _app_token     = ''
+    timestamp = Time.now.strftime("%Y%m%d%H%M%S")
+    sig = Digest::MD5.hexdigest(_appid + current_user.id + timestamp + _app_token)
+    render :json => {:timestamp => timestamp, :sig =>sig}.to_json
   end
 
   protected

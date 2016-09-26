@@ -4,35 +4,41 @@
     talker_id: null
 
   componentDidMount: ->
-    _appid         = ''
-    _app_token     = ''
-    _user_id       =  @props.data.current_user.id
+    resp = RL_YTX.init(@props.data._appid)
 
-    resp = RL_YTX.init(_appid)
     if 200 == resp.code 
       console.log "初始化成功 开始登陆"
       loginBuilder = new RL_YTX.LoginBuilder()
       loginBuilder.setType(1)
-      loginBuilder.setUserName(_user_id)
+      loginBuilder.setUserName(@props.data.current_user.id)
       loginBuilder.setPwd()
-      timestamp = @now_format_time()
-      sig = hex_md5(_appid + _user_id + timestamp + _app_token)
-      loginBuilder.setSig(sig)
-      loginBuilder.setTimestamp(timestamp)
-      
-      RL_YTX.login loginBuilder, (obj)=>
-        console.log "登陆成功 设置昵称+监听即时通信消息+离线消息(解决丢失发送人)"
-        uploadPersonInfoBuilder = new RL_YTX.UploadPersonInfoBuilder()
-        uploadPersonInfoBuilder.setNickName(@props.data.current_user.name)
-        RL_YTX.uploadPerfonInfo uploadPersonInfoBuilder
-        ,
-        (obj)->
-        ,
-        (resp)->
-          console.log resp.code
 
-      RL_YTX.onMsgReceiveListener (obj)=>
-        @EV_onMsgReceiveListener(obj)
+      sig       = ""
+      timestamp = ""
+      jQuery.ajax
+        url: "/get_sig",
+        method: "POST"
+      .success (msg)=>
+        timestamp = msg["timestamp"]
+        sig = msg["sig"]
+        loginBuilder.setSig(sig)
+        loginBuilder.setTimestamp(timestamp)
+        @login_user(loginBuilder)
+  
+  login_user:(loginBuilder)->
+    RL_YTX.login loginBuilder, (obj)=>
+      console.log "登陆成功 设置昵称+监听即时通信消息+离线消息(解决丢失发送人)"
+      uploadPersonInfoBuilder = new RL_YTX.UploadPersonInfoBuilder()
+      uploadPersonInfoBuilder.setNickName(@props.data.current_user.name)
+      RL_YTX.uploadPerfonInfo uploadPersonInfoBuilder
+      ,
+      (obj)->
+      ,
+      (resp)->
+        console.log resp.code
+
+    RL_YTX.onMsgReceiveListener (obj)=>
+      @EV_onMsgReceiveListener(obj) 
 
   EV_onMsgReceiveListener:(obj)->
     you_senderNickName = obj.senderNickName
@@ -58,26 +64,6 @@
   set_talker: (id)->
     @setState
       talker_id: id
-
-  now_format_time: ->
-    now = new Date()
-    year = "" + now.getFullYear() 
-    month = "" + (now.getMonth() + 1)
-    if month.length == 1
-      month = "0" + month
-    day = "" + now.getDate()
-    if day.length == 1
-      day = "0" + day
-    hour = "" + now.getHours()
-    if hour.length == 1
-      hour = "0" + hour
-    minute = "" + now.getMinutes()
-    if minute.length == 1
-      minute = "0" + minute
-    second = "" + now.getSeconds()
-    if second.length == 1
-      second = "0" + second
-    year +  month +  day +  hour +  minute +  second
 
   timestamp_format_time: (now)->
     year = "" + now.getFullYear() 
