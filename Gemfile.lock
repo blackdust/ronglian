@@ -6,6 +6,12 @@ GIT
     play_auth (0.1.0)
       bcrypt
 
+GIT
+  remote: https://github.com/mindpin/mina_util.git
+  revision: 616971801e40cb1ad40fd7531867260eb80545dd
+  specs:
+    mina_util (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -205,6 +211,7 @@ DEPENDENCIES
   haml
   jbuilder (~> 2.0)
   jquery-rails
+  mina_util!
   mongoid
   play_auth!
   rails (= 4.2.6)
