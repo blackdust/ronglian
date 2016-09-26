@@ -57,4 +57,5 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'simple_form' 
 gem "figaro", "~> 1.1.1"
 gem "mina", "0.3.7"
-gem 'mina_util', git: "https://github.com/mindpin/mina_util.git"                   
+gem 'mina_util', git: "https://github.com/mindpin/mina_util.git"   
+gem "unicorn"                
