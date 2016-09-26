@@ -54,4 +54,5 @@ gem 'sprockets-coffee-react', '4.0.0'
 
 
 gem 'bootstrap-sass', '~> 3.3.5'
-gem 'simple_form'               
+gem 'simple_form' 
+gem "figaro", "~> 1.1.1"                   

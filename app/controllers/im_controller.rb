@@ -12,7 +12,7 @@ class ImController < ApplicationController
       messages: [],
       current_user: {id:current_user.id.to_s, name: current_user.name},
       users: ary,
-      _appid: ''
+      _appid: ENV["RONG_LIAN_YUN_APP_ID"]
     }
 
   end
@@ -24,13 +24,13 @@ class ImController < ApplicationController
     @component_data = {
       current_user: {id:current_user.id.to_s, name: current_user.name},
       users:ary,
-      _appid: ''
+      _appid: ENV["RONG_LIAN_YUN_APP_ID"]
     }
   end
 
   def get_sig
-    _appid         = ''
-    _app_token     = ''
+    _appid         = ENV["RONG_LIAN_YUN_APP_ID"]
+    _app_token     = ENV["RONG_LIAN_YUN_APP_TOKEN"]
     timestamp = Time.now.strftime("%Y%m%d%H%M%S")
     sig = Digest::MD5.hexdigest(_appid + current_user.id + timestamp + _app_token)
     render :json => {:timestamp => timestamp, :sig =>sig}.to_json
