@@ -4,8 +4,8 @@
     talker_id: null
 
   componentDidMount: ->
-    _appid         = '8aaf070856c130260156c638cd0104eb'
-    _app_token     = '3cd37b7b317a47f834c4a975ac4ac483'
+    _appid         = ''
+    _app_token     = ''
     _user_id       =  @props.data.current_user.id
 
     resp = RL_YTX.init(_appid)
