@@ -1,28 +1,43 @@
-== README
+访问地址：
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+http://rl.im.teamkn.com/chatbox
+http://rl.im.teamkn.com/chatboxgroup
 
-Things you may want to cover:
+---------------------------
 
-* Ruby version
+演示说明：
 
-* System dependencies
+访问单聊页面
+  rl.im.teamkn.com/chatbox 
 
-* Configuration
+如果 session 没有找到已登录用户，跳转到：
+  http://rl.im.teamkn.com/auth/users/developers
+快速登录用户
 
-* Database creation
+------------------------
 
-* Database initialization
+登录后，再次访问
+  rl.im.teamkn.com/chatbox
 
-* How to run the test suite
+打开浏览器控制台，会显示 
+  初始化完成 + 用户登录（服务器user表登录容联云子账号） + 设置子账号昵称 + 拉取离线消息
 
-* Services (job queues, cache servers, search engines, etc.)
+---------------------------
 
-* Deployment instructions
+用另一个浏览器重复以上动作（登录另一个用户）
+点击开发者按钮选定要发送消息的对象，再在输入框里输入文字，点击发送。
+对方的控制台会显示 发送的信息（带发送者昵称），如果在他没有登录时发送了信息，他登录的一瞬间会收到。
 
-* ...
+-------------------------------
 
+再来访问第二个页面（群聊）
+  rl.im.teamkn.com/chatboxgroup
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+在用户选择列表里勾选用户，在新建讨论组名称 input 里取名，点击邀请加入讨论组。
+（控制台会显示结构，刷新页面后，页面会显示用户所属的讨论组）
+
+用户加入的讨论组里有个复选框，点击一个群组后再输入想说的话的 textarea 里输入文字，点击发送后就可以群聊
+
+用户加入的讨论组里如果点击选择列表里的一些用户再点击邀请其他成员，就是持续加人。
+
+还有退出讨论组和获取成员列表按钮
